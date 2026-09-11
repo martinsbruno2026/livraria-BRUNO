@@ -1,0 +1,30 @@
+{
+  "name": "livraria-bruno",
+  "version": "1.0.0",
+  "description": "Aplicação de exemplo para a livraria - projeto Bruno",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"No tests specified\" && exit 0",
+    "lint": "eslint . || true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martinsbruno2026/livraria-BRUNO.git"
+  },
+  "author": "Bruno Martins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/martinsbruno2026/livraria-BRUNO/issues"
+  },
+  "homepage": "https://github.com/martinsbruno2026/livraria-BRUNO#readme",
+  "engines": {
+    "node": ">=14"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "eslint": "^8.46.0"
+  },
+  "dependencies": {}
+}
