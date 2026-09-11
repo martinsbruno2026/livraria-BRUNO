@@ -1,0 +1,3 @@
+[pdm]
+pdm_django=pdm_django.main:reg_commands
+

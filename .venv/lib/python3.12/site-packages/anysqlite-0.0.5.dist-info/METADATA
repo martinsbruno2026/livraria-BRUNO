@@ -1,0 +1,49 @@
+Metadata-Version: 2.1
+Name: anysqlite
+Version: 0.0.5
+Project-URL: Issues, https://github.com/karosis88/anysqlite/issues
+Project-URL: Source, https://github.com/karosis88/anysqlite
+Author-email: Karen Petrosyan <kar.petrosyanpy@gmail.com>
+License-Expression: BSD-3-Clause
+License-File: LICENSE.txt
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.8
+Requires-Dist: anyio>3.4.0
+Description-Content-Type: text/markdown
+
+# anysqlite
+
+Anysqlite provides an `async/await` interface to the standard `sqlite3` library and supports both `trio` and `asyncio` backends using the power of [Anyio](https://github.com/agronholm/anyio).
+
+
+[![PyPI - Version](https://img.shields.io/pypi/v/anysqlite.svg)](https://pypi.org/project/anysqlite)
+[![PyPI - Python Version](https://img.shields.io/pyp1i/pyversions/anysqlite.svg)](https://pypi.org/project/anysqlite)
+
+-----
+
+## Installation
+
+```console
+pip install anysqlite
+```
+
+## Basic usage
+
+``` python
+>>> import anysqlite
+>>> 
+>>> conn = await anysqlite.connect(":memory:")
+>>> cursor = await conn.execute("SELECT DATETIME()")
+>>> 
+>>> response = await cursor.fetchone()
+>>> print(response)
+[('2023-10-02 13:42:42',)]
+```

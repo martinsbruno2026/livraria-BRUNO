@@ -1,0 +1,3 @@
+[pdm]
+autoexport = pdm_autoexport:main
+

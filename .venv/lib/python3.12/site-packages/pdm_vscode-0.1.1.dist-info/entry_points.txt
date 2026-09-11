@@ -1,0 +1,3 @@
+[pdm]
+vscode=pdm_vscode:main
+
