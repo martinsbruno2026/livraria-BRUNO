@@ -114,3 +114,24 @@ class CompraSerializer(serializers.ModelSerializer):
         model = Compra
         fields = ['id', 'data_criacao', 'data_atualizacao', 'outros_campos...']
        
+
+# models.py (Exemplo)
+from django.db import models
+
+class Compra(models.Model):
+    TIPO_PAGAMENTO_CHOICES = [
+        ('CARTAO', 'Cartão de Crédito'),
+        ('BOLETO', 'Boleto Bancário'),
+        ('PIX', 'Pix'),
+        ('CHEQUE', 'Cheque'),  # <-- Adicione esta linha
+    ]
+
+    # ... outros campos como cliente, valor, etc.
+    tipo_pagamento = models.CharField(
+        max_length=10,
+        choices=TIPO_PAGAMENTO_CHOICES,
+        default='PIX',
+    )
+
+    def __str__(self):
+        return f"Compra {self.id} - {self.tipo_pagamento}"
