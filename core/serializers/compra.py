@@ -105,3 +105,12 @@ class CompraSerializer(ModelSerializer):
     class Meta:
         model = Compra
         fields = ('id', 'usuario', 'status', 'total', 'itens')
+
+from rest_framework import serializers
+from .models import Compra
+
+class CompraSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Compra
+        fields = ['id', 'data_criacao', 'data_atualizacao', 'outros_campos...']
+       
