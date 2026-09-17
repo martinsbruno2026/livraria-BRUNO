@@ -2,7 +2,7 @@ from django.db import transaction
 from rest_framework.serializers import (
     CharField,
     CurrentUserDefault,
-    DecimalField,
+    DateTimeField,
     HiddenField,
     ModelSerializer,
     SerializerMethodField,
@@ -100,38 +100,10 @@ class CompraListSerializer(ModelSerializer):
 class CompraSerializer(ModelSerializer):
     usuario = CharField(source='usuario.email', read_only=True)
     status = CharField(source='get_status_display', read_only=True)
+    tipo_pagamento = CharField(source='get_tipo_pagamento_display', read_only=True)
+    data = DateTimeField(read_only=True)
     itens = ItensCompraSerializer(many=True, read_only=True)
 
     class Meta:
         model = Compra
-        fields = ('id', 'usuario', 'status', 'total', 'itens')
-
-from rest_framework import serializers
-from .models import Compra
-
-class CompraSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Compra
-        fields = ['id', 'data_criacao', 'data_atualizacao', 'outros_campos...']
-       
-
-# models.py (Exemplo)
-from django.db import models
-
-class Compra(models.Model):
-    TIPO_PAGAMENTO_CHOICES = [
-        ('CARTAO', 'Cartão de Crédito'),
-        ('BOLETO', 'Boleto Bancário'),
-        ('PIX', 'Pix'),
-        ('CHEQUE', 'Cheque'),  # <-- Adicione esta linha
-    ]
-
-    # ... outros campos como cliente, valor, etc.
-    tipo_pagamento = models.CharField(
-        max_length=10,
-        choices=TIPO_PAGAMENTO_CHOICES,
-        default='PIX',
-    )
-
-    def __str__(self):
-        return f"Compra {self.id} - {self.tipo_pagamento}"
+        fields = ('id', 'usuario', 'status', 'tipo_pagamento', 'data', 'total', 'itens')
