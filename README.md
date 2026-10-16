@@ -1,119 +1,105 @@
-# Livraria API (Django + DRF + uv)
+# Livraria — Django Admin + API REST
 
-API REST de uma livraria desenvolvida com Django e Django REST Framework (DRF), gerenciada com [uv](https://docs.astral.sh/uv/) e padronizada com o linter/formatador [Ruff](https://docs.astral.sh/ruff/).
+Projeto didático com Django, Django REST Framework, SQLite, painel Admin, JWT e documentação Swagger.
 
-## Tecnologias Utilizadas
+## Requisitos
 
-- [Python 3.14](https://www.python.org/)
-- [uv](https://docs.astral.sh/uv/): Gerenciador de pacotes e ambientes virtuais ultrarrápido para Python.
-- [Django](https://www.djangoproject.com/) & [Django REST Framework](https://www.django-rest-framework.org/): Framework web e toolkit para construção de Web APIs.
-- [Ruff](https://docs.astral.sh/ruff/): Linter e formatador de código Python de alta performance.
-- [SQLite](https://www.sqlite.org/): Banco de dados relacional para desenvolvimento local.
-- [PostgreSQL](https://www.postgresql.org/): Banco de dados relacional para produção.
-- [drf-spectacular](https://drf-spectacular.readthedocs.io/): Geração de esquemas OpenAPI 3 e documentação Swagger / Redoc.
-- [SimpleJWT](https://django-rest-framework-simplejwt.readthedocs.io/): Autenticação via JWT.
-- [Cloudinary](https://cloudinary.com/): Armazenamento de arquivos de mídia em nuvem.
-- [WhiteNoise](http://whitenoise.evans.io/): Servidor de arquivos estáticos.
-- [Gunicorn](https://gunicorn.org/) / [Uvicorn](https://www.uvicorn.org/): Servidores WSGI / ASGI.
-- [Django-Extensions](https://django-extensions.readthedocs.io/): Ferramentas adicionais como `shell_plus` e `graph_models`.
-- [Django-Filter](https://django-filter.readthedocs.io/): Filtragem de dados em APIs REST.
+- Python 3.11 ou superior
+- Git (opcional)
+- PDM
 
----
-
-## Instalação e Configuração
-
-### 1. Pré-requisitos
-
-Certifique-se de ter o `uv` instalado em seu sistema:
+## Instalação
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-### 2. Clonar o repositório e instalar dependências
-
-```bash
-git clone https://github.com/marrcandre/livraria-marrcandre-back.git
-cd livraria-marrcandre-back
-
-# Sincroniza o ambiente virtual (.venv) e instala todas as dependências
-make sync
-# ou diretamente via uv:
-uv sync --all-groups
-```
-
-### 3. Configurar variáveis de ambiente
-
-Crie o arquivo `.env` a partir do modelo `.env.example`:
-
-```bash
+# Entre na pasta do projeto
 cp .env.example .env
+pdm install
+pdm run migrate
+pdm run seed-admin
+pdm run dev
 ```
 
-### 4. Executar as migrações e carregar dados iniciais
+Se o comando `pdm` não existir, instale-o seguindo a documentação oficial do PDM e reinicie o terminal.
 
-```bash
-make migrate
-make loaddata  # Carrega os dados de exemplo do core.json
+## Endereços
+
+- Admin: http://127.0.0.1:8000/admin/
+- API raiz: http://127.0.0.1:8000/api/
+- Categorias: http://127.0.0.1:8000/api/categorias/
+- Editoras: http://127.0.0.1:8000/api/editoras/
+- Autores: http://127.0.0.1:8000/api/autores/
+- Livros: http://127.0.0.1:8000/api/livros/
+- Compras: http://127.0.0.1:8000/api/compras/
+- Swagger: http://127.0.0.1:8000/api/swagger/
+- ReDoc: http://127.0.0.1:8000/api/redoc/
+- Schema OpenAPI: http://127.0.0.1:8000/api/schema/
+
+## Acesso de demonstração ao Admin
+
+Depois de executar `pdm run seed-admin`:
+
+- E-mail: `a@a.com`
+- Senha: `teste.123`
+
+Essas credenciais são apenas para desenvolvimento local. Troque a senha e não publique este usuário em um servidor real.
+
+## Entidades
+
+- `Categoria`: descrição.
+- `Editora`: nome e site opcional.
+- `Autor`: nome e e-mail opcional.
+- `Livro`: título, ISBN, quantidade, preço, categoria, editora e vários autores.
+- `User`: usuário customizado com e-mail único.
+- `Compra`: usuário, data e observação.
+- `ItemCompra`: livro, quantidade e preço unitário.
+
+## API REST
+
+Os endpoints de recursos usam `ModelViewSet`, então disponibilizam GET, POST, PUT, PATCH e DELETE. O endpoint `users` exige autenticação de administrador.
+
+### Exemplo: criar uma categoria
+
+```http
+POST /api/categorias/
+Content-Type: application/json
+
+{
+  "descricao": "Ficção"
+}
 ```
 
-### 5. Iniciar o servidor de desenvolvimento
+### Exemplo: criar uma editora
 
-```bash
-make dev
+```json
+{
+  "nome": "Editora Exemplo",
+  "site": "https://example.com"
+}
 ```
 
-A API estará disponível em: `http://127.0.0.1:8000/api/`
+### Exemplo: criar um livro
 
----
+Os campos `categoria`, `editora` e `autores` recebem IDs. Exemplo:
 
-## Documentação da API
+```json
+{
+  "titulo": "Diário de um Banana",
+  "isbn": "9788576831300",
+  "quantidade": 12,
+  "preco": "39.90",
+  "categoria": 1,
+  "editora": 1,
+  "autores": [1]
+}
+```
 
-- **Swagger UI**: `http://127.0.0.1:8000/api/doc/`
-- **Redoc**: `http://127.0.0.1:8000/api/redoc/`
-- **Schema OpenAPI**: `http://127.0.0.1:8000/api/schema/`
+### Autenticação JWT
 
----
+Solicite tokens em `POST /api/token/` com JSON contendo `username` e `password`. Use o `access` recebido como `Authorization: Bearer <token>`. Para renovar, envie `refresh` para `POST /api/token/refresh/`.
 
-## Comandos Úteis (Makefile)
+## Observações
 
-O projeto possui um `Makefile` com atalhos para os comandos mais comuns:
-
-### Ambiente e Dependências
-- `make sync`: Sincroniza o ambiente com `uv.lock`.
-- `make lock`: Atualiza o arquivo `uv.lock`.
-- `make upgrade`: Atualiza todas as dependências.
-- `make tree`: Exibe a árvore de dependências.
-- `make add package=PACOTE`: Adiciona uma dependência de produção.
-- `make add-dev package=PACOTE`: Adiciona uma dependência de desenvolvimento.
-- `make remove package=PACOTE`: Remove uma dependência.
-
-### Django
-- `make dev`: Inicia o servidor com Uvicorn (`http://0.0.0.0:8000`).
-- `make dev-django`: Inicia com o `runserver` padrão do Django.
-- `make makemigrations`: Cria novas migrations.
-- `make migrate`: Aplica as migrations pendentes.
-- `make migrations`: Cria migrations, aplica e gera o diagrama de modelos (`core.png`).
-- `make createsuperuser`: Cria um superusuário.
-- `make shell` / `make shellp`: Abre o Django Shell / Shell Plus.
-- `make graph-models`: Gera o diagrama dos modelos (`core.png`).
-- `make check-django`: Valida a configuração do Django.
-- `make test`: Executa a suíte de testes.
-- `make loaddata`: Carrega dados de `core.json`.
-- `make dumpdata`: Exporta os dados para JSON.
-
-### Qualidade de Código (Ruff)
-- `make lint`: Verifica o código com o Ruff.
-- `make lint-fix`: Aplica correções automáticas de lint.
-- `make format`: Formata o código com o Ruff.
-- `make format-check`: Verifica a formatação sem modificar os arquivos.
-- `make quality`: Executa lint e verificação de formatação.
-
-### Deploy
-- `make deploy-check`: Executa verificações de pré-deploy do Django com `--locked`.
-
----
-
-## Licença
-
-Este projeto está licenciado sob a [Licença MIT](https://opensource.org/licenses/MIT).
+- Banco SQLite criado localmente após as migrações.
+- `on_delete=PROTECT` impede apagar categorias/editoras/autores/livros que ainda tenham relacionamentos protegidos.
+- A API permite CORS para `localhost:3000` e `127.0.0.1:3000`; altere `.env` se necessário.
+- Não use as credenciais de demonstração em produção.

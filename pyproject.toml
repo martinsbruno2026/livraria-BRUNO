@@ -1,47 +1,23 @@
 [project]
-name = "livraria-marrcandre-back"
-version = "1.0.0"
-description = "Uma API REST de uma livraria feita com Django e Django REST Framework."
-authors = [{ name = "Marco André Mendes", email = "marcoandre@gmail.com" }]
+name = "livraria"
+version = "0.1.0"
+description = "API REST Django para uma livraria, com painel administrativo."
+requires-python = ">=3.11"
 dependencies = [
-  'dj-database-url>=2.1.0',
-  'django-cloudinary-storage>=0.3.0',
-  'django-cors-headers>=4.3.0',
-  'django-extensions>=3.2.3',
-  'django-filter>=23.3',
-  "django>=6.0.4",
-  'djangorestframework>=3.14.0',
-  'drf-spectacular>=0.26.5',
-  'gunicorn>=21.2.0',
-  "djangorestframework-simplejwt>=5.5.1",
-  'Pillow>=10.3.0',
-  'psycopg2-binary>=2.9.9',
-  'pydotplus>=2.0.2',
-  'python-dotenv>=1.0.0',
-  'python-magic-bin>=0.4.14; sys_platform == "win32"',
-  'python-magic>=0.4.27; sys_platform == "linux"',
-  'setuptools>=68.2.2',
-  'uvicorn>=0.29.0',
-  'whitenoise[brotli]>=6.6.0',
-]
-requires-python = ">=3.14"
-license = { text = "MIT" }
-
-[dependency-groups]
-dev = [
-  "ipython>=8.26.0",
-  "ruff>=0.11.2",
+    "django>=5.1,<5.2",
+    "djangorestframework>=3.15,<3.17",
+    "django-filter>=24.3",
+    "django-cors-headers>=4.6",
+    "djangorestframework-simplejwt>=5.3",
+    "drf-spectacular>=0.28",
+    "pillow>=11.0",
 ]
 
-[tool.ruff]
-line-length = 120
-extend-exclude = ['migrations', '__init__.py', 'manage.py']
+[tool.pdm]
+distribution = false
 
-[tool.ruff.lint]
-preview = true
-select = ['I', 'F', 'E', 'W', 'PL', 'PT']
-ignore = ["PLR6301"]
-
-[tool.ruff.format]
-preview = true
-quote-style = 'single'
+[tool.pdm.scripts]
+dev = "python manage.py runserver 0.0.0.0:8000"
+migrate = { composite = ["python manage.py makemigrations core", "python manage.py migrate"] }
+shellp = "python manage.py shell"
+createsuperuser = "python manage.py createsuperuser"
