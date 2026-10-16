@@ -20,28 +20,23 @@ class Compra(models.Model):
         DINHEIRO = 6, 'Dinheiro'
         OUTRO = 7, 'Outro'
 
-    usuario = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        related_name='compras'
-    )
-    status = models.IntegerField(
-        choices=StatusCompra.choices,
-        default=StatusCompra.CARRINHO
-    )
-    tipo_pagamento = models.IntegerField(
-        choices=TipoPagamento.choices,
-        default=TipoPagamento.PIX
-    )
+    usuario = models.ForeignKey(User, on_delete=models.PROTECT, related_name='compras')
+    status = models.IntegerField(choices=StatusCompra.choices, default=StatusCompra.CARRINHO)
+    tipo_pagamento = models.IntegerField(choices=TipoPagamento.choices, default=TipoPagamento.CARTAO_CREDITO)
     data = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    @property
-    def total(self):
-        return sum(item.preco * item.quantidade for item in self.itens.all())
+    def save(self, *args, **kwargs):
+        if self.pk:
+            self.total = sum(item.preco * item.quantidade for item in self.itens.all())
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'({self.id}) {self.usuario} {self.get_status_display()} {self.total}'
 
 
 class ItensCompra(models.Model):
     compra = models.ForeignKey(Compra, on_delete=models.CASCADE, related_name='itens')
-    livro = models.ForeignKey(Livro, on_delete=models.PROTECT, related_name='+')
+    livro = models.ForeignKey(Livro, on_delete=models.PROTECT, related_name='itens_compra')
     quantidade = models.IntegerField(default=1)
-    preco = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+    preco = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0)

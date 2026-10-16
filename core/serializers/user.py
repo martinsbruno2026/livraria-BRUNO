@@ -1,4 +1,5 @@
-from rest_framework.serializers import CharField, ModelSerializer, SlugRelatedField
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, SlugRelatedField
 
 from core.models import User
 from uploader.models import Image
@@ -13,28 +14,29 @@ class UserSerializer(ModelSerializer):
         required=False,
         write_only=True,
     )
-    foto = ImageSerializer(
-        required=False,
-        read_only=True
-    )
+
+    foto = ImageSerializer(required=False, read_only=True)
+
     class Meta:
         model = User
-        fields = (
+        fields = [
             'id',
             'email',
             'name',
-            'foto',
-            'foto_attachment_key',
             'is_active',
             'is_staff',
             'is_superuser',
             'last_login',
-            'groups')
+            'groups',
+            'foto',
+            'foto_attachment_key',
+            'tipo_usuario',
+        ]
         depth = 1
 
 
 class UserRegistrationSerializer(ModelSerializer):
-    password = CharField(write_only=True, min_length=8)
+    password = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
         model = User

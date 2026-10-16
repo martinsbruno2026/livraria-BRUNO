@@ -1,3 +1,7 @@
+"""
+Database models.
+"""
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -38,24 +42,17 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """User model in the system."""
 
-    email = models.EmailField(max_length=255, unique=True, verbose_name=_('email'), help_text=_('Email'))
-    name = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('name'), help_text=_('Username'))
-    is_active = models.BooleanField(
-        default=True, verbose_name=_('Usuário está ativo'), help_text=_('Indica que este usuário está ativo.')
-    )
-    is_staff = models.BooleanField(
-        default=False,
-        verbose_name=_('Usuário é da equipe'),
-        help_text=_('Indica que este usuário pode acessar o Admin.'),
-    )
-    foto = models.ForeignKey(
-        Image,
-        related_name='user_foto',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        default=None,
-    )
+    class TipoUsuario(models.IntegerChoices):
+        CLIENTE = 1, 'Cliente'
+        VENDEDOR = 2, 'Vendedor'
+        GERENTE = 3, 'Gerente'
+
+    email = models.EmailField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    foto = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True, default=None)
+    tipo_usuario = models.IntegerField(_('User Type'), choices=TipoUsuario.choices, default=TipoUsuario.CLIENTE)
 
     objects = UserManager()
 
@@ -63,7 +60,5 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     class Meta:
-        """Meta options for the model."""
-
         verbose_name = 'Usuário'
         verbose_name_plural = 'Usuários'
