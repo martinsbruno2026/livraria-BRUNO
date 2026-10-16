@@ -1,105 +1,97 @@
-# Livraria — Django Admin + API REST
+# Template de projeto Django com DRF e PDM
 
-Projeto didático com Django, Django REST Framework, SQLite, painel Admin, JWT e documentação Swagger.
+Esse é um template de projeto Django com DRF, PDM e muito mais. Ele já vem com algumas configurações e pacotes pré-instalados, como o PDM, Django, Django REST Framework, PostgreSQL, SQLite, Swagger, black, isort, Render, Cloudinary, Corsheaders, Django-Extensions, Django-Filter, dotenv, dj-database-url, drf-spectacular, gunicorn, netifaces, rest-framework-simplejwt, whitenoise e passage.id
 
-## Requisitos
+Esse template já está pronto para ser utilizado em produção, com o [Render](http://render.com) e o [PostgreSQL](https://www.postgresql.org/). Mas também pode ser utilizado em desenvolvimento, com o [PDM](https://pdm.fming.dev/) e o [SQLite](https://www.sqlite.org/index.html).
 
-- Python 3.11 ou superior
-- Git (opcional)
-- PDM
+O template também já vem com alguns arquivos de configuração pré-configurados, como:
 
-## Instalação
+- `pyproject.toml`: Arquivo de configuração do PDM.
+- `Procfile`: Arquivo de configuração do Fl0.
+- `settings.py`: Arquivo de configuração do Django.
+- `urls.py`: Arquivo de configuração das rotas do Django.
+- `wsgi.py`: Arquivo de configuração do Gunicorn.
+- `.env.exemplo`: Arquivo de exemplo de configuração das variáveis de ambiente.
+- `.gitignore`: Arquivo de configuração do Git, para ignorar arquivos e diretórios.
 
-```bash
-# Entre na pasta do projeto
-cp .env.example .env
-pdm install
-pdm run migrate
-pdm run seed-admin
-pdm run dev
-```
+O template também traz o usuário padrão modificado, com o login sendo feito com o `e-mail` e não com o `username`. Inclusões de campos, como `telefone`, `data de nascimento` e `foto de perfil`, podem ser feitas facilmente.
 
-Se o comando `pdm` não existir, instale-o seguindo a documentação oficial do PDM e reinicie o terminal.
+O projeto Django criado chama-se `app` e a aplicação Django criada chama-se `core`. O projeto já vem com um modelo de usuário customizado, com autenticação pelo `passage.id`. Arquivos estáticos, como fotos, podem ser armazenados no [Cloudinary](https://cloudinary.com/).
 
-## Endereços
+O projeto também já vem com a documentação da API, gerada automaticamente pelo Swagger, e com a formatação de código Python, feita pelo black e pelo isort.
 
-- Admin: http://127.0.0.1:8000/admin/
-- API raiz: http://127.0.0.1:8000/api/
-- Categorias: http://127.0.0.1:8000/api/categorias/
-- Editoras: http://127.0.0.1:8000/api/editoras/
-- Autores: http://127.0.0.1:8000/api/autores/
-- Livros: http://127.0.0.1:8000/api/livros/
-- Compras: http://127.0.0.1:8000/api/compras/
-- Swagger: http://127.0.0.1:8000/api/swagger/
-- ReDoc: http://127.0.0.1:8000/api/redoc/
-- Schema OpenAPI: http://127.0.0.1:8000/api/schema/
+## Instalação e Configuração
 
-## Acesso de demonstração ao Admin
+1. Certifique-se de ter o [Python](https://www.python.org/) instalado em seu sistema.
 
-Depois de executar `pdm run seed-admin`:
+2. Crie um novo projeto a partir desse template:
+- Acesse o _template_ em https://github.com/marrcandre/template_django_pdm.
+- Clique no botão `Use this template` em `Create a new repository`.
+- Preencha as informações solicitadas:
+  - `Owner`: <seu usuário no GitHub>
+  - `Repository name`: `livraria`
+- Click no botão `Create repository`.
 
-- E-mail: `a@a.com`
-- Senha: `teste.123`
+3. Abra o projeto no vscode e execute o terminal.
 
-Essas credenciais são apenas para desenvolvimento local. Troque a senha e não publique este usuário em um servidor real.
+2. Crie um ambiente virtual usando o [PDM](https://pdm.fming.dev/):
 
-## Entidades
+   ```
+   pdm install
+   ```
 
-- `Categoria`: descrição.
-- `Editora`: nome e site opcional.
-- `Autor`: nome e e-mail opcional.
-- `Livro`: título, ISBN, quantidade, preço, categoria, editora e vários autores.
-- `User`: usuário customizado com e-mail único.
-- `Compra`: usuário, data e observação.
-- `ItemCompra`: livro, quantidade e preço unitário.
+3. Crie o arquivo .env, a partir do arquivo .env.exemplo, e configure as variáveis de ambiente:
 
-## API REST
+   ```
+   cp .env.exemplo .env
+   ```
 
-Os endpoints de recursos usam `ModelViewSet`, então disponibilizam GET, POST, PUT, PATCH e DELETE. O endpoint `users` exige autenticação de administrador.
+4. Execute o servidor de desenvolvimento:
 
-### Exemplo: criar uma categoria
+   ```
+   pdm run dev
+   ```
 
-```http
-POST /api/categorias/
-Content-Type: application/json
+5. Acesse a API em http://localhost:19003/api/
 
-{
-  "descricao": "Ficção"
-}
-```
+## Uso da API
 
-### Exemplo: criar uma editora
+A documentação completa dos endpoints da API e exemplos de uso estão disponíveis na [Documentação da API](http://localhost:19003/api/swagger/).
 
-```json
-{
-  "nome": "Editora Exemplo",
-  "site": "https://example.com"
-}
-```
+## Comandos Úteis
 
-### Exemplo: criar um livro
+- `pdm run dev`: Executa o servidor de desenvolvimento. Antes de executar o servidor, descobre o endereço IP da máquina e atualiza o arquivo `.env` com o endereço IP.
+- `pdm run migrate`: Executa as migrações do banco de dados. Antes de executar o `migrate`, executa o `makemigrations`. Depois de executar o `migrate`, executa o `graph_models`, atualizando o diagrama de classes dos modelos do projeto.
+- Para mais detalhes, consulte o arquivo `pyproject.toml`, na seção `[tool.pdm.scripts]`.
 
-Os campos `categoria`, `editora` e `autores` recebem IDs. Exemplo:
+## Detalhes do Projeto
 
-```json
-{
-  "titulo": "Diário de um Banana",
-  "isbn": "9788576831300",
-  "quantidade": 12,
-  "preco": "39.90",
-  "categoria": 1,
-  "editora": 1,
-  "autores": [1]
-}
-```
+Esse projeto utiliza os seguintes pacotes e tecnologias:
 
-### Autenticação JWT
+- [PDM](https://pdm.fming.dev/): Gerenciador de pacotes e ambiente virtual para Python.
+- [Django](https://www.djangoproject.com/): Framework web de alto nível escrito em Python.
+- [Django REST Framework](https://www.django-rest-framework.org/): Framework para desenvolvimento de APIs REST com Django.
+- [PostgreSQL](https://www.postgresql.org/): Banco de dados relacional, utilizado no ambiente de produção.
+- [SQLite](https://www.sqlite.org/index.html): Banco de dados relacional, utilizado no ambiente de desenvolvimento.
+- [Swagger](https://swagger.io/): Framework para documentação de APIs REST.
+- [Ruff] (http://https://docs.astral.sh/ruff/): Linter e formatador de código Python, escrito em Rust.
+- [Render](http://render.com): Ferramenta de _deploy_ de aplicações _backend_.
+- [Cloudinary](https://cloudinary.com/): Serviço de armazenamento de arquivos estáticos em nuvem.
+- [Corsheaders](https://pypi.org/project/django-cors-headers/): Pacote para permitir que aplicações frontend acessem a API.
+- [Django-Extensions](https://django-extensions.readthedocs.io/en/latest/): Pacote com extensões para o Django, como o `shell_plus`, que permite acessar o shell do Django com todos os modelos importados e o comando `graph_models`, que gera um diagrama de classes dos modelos do projeto.
+- [Django-Filter](https://django-filter.readthedocs.io/en/stable/): Pacote para filtragem, ordenação e paginação de dados em APIs REST.
+- [dotenv](https://pypi.org/project/python-dotenv/): Pacote para carregar variáveis de ambiente a partir de um arquivo `.env`.
+- [dj-database-url](https://pypi.org/project/dj-database-url/): Pacote para configurar o banco de dados a partir de uma URL.
+- [drf-spectacular](https://drf-spectacular.readthedocs.io/en/latest/): Pacote para geração de documentação de APIs REST com o Swagger.
+- [gunicorn](https://gunicorn.org/): Pacote para servir aplicações Django em produção.
+- [netifaces](https://pypi.org/project/netifaces/): Pacote para obter o endereço IP da máquina.
+- [rest-framework-simplejwt](https://django-rest-framework-simplejwt.readthedocs.io/en/latest/): Pacote para autenticação JWT em APIs REST.
+- [whitenoise](http://whitenoise.evans.io/en/stable/): Pacote para servir arquivos estáticos em aplicações Django.
+- [passage.id](https://passage.id): Pacote para autenticação de usuários.
 
-Solicite tokens em `POST /api/token/` com JSON contendo `username` e `password`. Use o `access` recebido como `Authorization: Bearer <token>`. Para renovar, envie `refresh` para `POST /api/token/refresh/`.
+## Licença
 
-## Observações
+Este projeto está licenciado sob a [Licença GPL](https://www.gnu.org/licenses/gpl-3.0.html), uma licença de software livre.
 
-- Banco SQLite criado localmente após as migrações.
-- `on_delete=PROTECT` impede apagar categorias/editoras/autores/livros que ainda tenham relacionamentos protegidos.
-- A API permite CORS para `localhost:3000` e `127.0.0.1:3000`; altere `.env` se necessário.
-- Não use as credenciais de demonstração em produção.
+
+

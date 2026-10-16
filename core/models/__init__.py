@@ -1,6 +1,6 @@
-from .user import User
-from .categoria import Categoria
-from .editora import Editora
 from .autor import Autor
+from .categoria import Categoria
+from .compra import Compra, ItensCompra
+from .editora import Editora
 from .livro import Livro
-from .compra import Compra, ItemCompra
+from .user import User
