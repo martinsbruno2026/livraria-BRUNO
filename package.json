@@ -4,7 +4,8 @@
   "description": "API REST de uma livraria desenvolvida com Django e Django REST Framework (DRF), gerenciada com [uv](https://docs.astral.sh/uv/) e padronizada com o linter/formatador [Ruff](https://docs.astral.sh/ruff/).",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/martinsbruno2026/livraria-BRUNO/issues"
   },
-  "homepage": "https://github.com/martinsbruno2026/livraria-BRUNO#readme"
+  "homepage": "https://github.com/martinsbruno2026/livraria-BRUNO#readme",
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
 }
